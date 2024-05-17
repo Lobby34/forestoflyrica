@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Path of Transmigrate</title>
+</head>
+<body>
+    <div class="gameZone">
+        <div class="locationWrap">
+            <div class="location">
+                <h1 id="titleOutput"></h1>
+                <img src="" width="500" height="450">
+                <div class="buttonsSet">
+                    <button id="takeButton">Take</button>
+                    <button id="useButton">Use</button>
+                    <button id="dropButton">Drop</button>
+                    <button id="helpButton">Help</button>
+                </div>
+                    <input type="text" id="input" placeholder="Enter the item... And press Enter" >
+                    <p id="outputDisplay"></p>
+                    <div id="backpackDisplay"></div>
+            </div>
+        </div>
+        <div class="map"></div>
+    </div>
+</body>
+
+<script>
+    //Images
+var images = [];
+
+images[0] = "1_1.png";
+images[1] = "2.png";
+images[2] = "3.png";
+images[3] = "4.png";
+images[4] = "5.png";
+images[5] = "6.png";
+images[6] = "7.png";
+images[7] = "8.png";
+images[8] = "9.png";
+images[9] = "10.png";
+images[10] = "11.png";
+images[11] = "12.png";
+images[12] = "13.png";
+images[13] = "14.png";
+images[14] = "15_1.png";
+images[15] = "16.png";
+images[16] = "17.png";
+images[17] = "18.png";
+images[18] = "19.png";
+images[19] = "20.png";
+images[20] = "21.png";
+images[21] = "22.png";
+images[22] = "23.png";
+images[23] = "24.png";
+images[24] = "25.png";
+
+//Map images
+
+var mapImages = [];
+
+mapImages[0] = "assets/map/m1.png";
+mapImages[1] = "assets/map/m2.png";
+mapImages[2] = "assets/map/m3.png";
+mapImages[3] = "assets/map/m4.png";
+mapImages[4] = "assets/map/m5.png";
+mapImages[5] = "assets/map/m6.png";
+mapImages[6] = "assets/map/m7.png";
+mapImages[7] = "assets/map/m8.png";
+mapImages[8] = "assets/map/m9.png";
+mapImages[9] = "assets/map/m10.png";
+mapImages[10] = "assets/map/m11.png";
+mapImages[11] = "assets/map/m12.png";
+mapImages[12] = "assets/map/m13.png";
+mapImages[13] = "assets/map/m14.png";
+mapImages[14] = "assets/map/m15.png";
+mapImages[15] = "assets/map/m16.png";
+mapImages[16] = "assets/map/m17.png";
+mapImages[17] = "assets/map/m18.png";
+mapImages[18] = "assets/map/m19.png";
+mapImages[19] = "assets/map/m20.png";
+mapImages[20] = "assets/map/m21.png";
+mapImages[21] = "assets/map/m22.png";
+mapImages[22] = "assets/map/m23.png";
+mapImages[23] = "assets/map/m24.png";
+mapImages[24] = "assets/map/m25.png";
+
+//Map location name
+var mapName = [];
+
+mapName[0] = "The immovable head";
+mapName[1] = "The cave of souls";
+mapName[2] = "Quiet road";
+mapName[3] = "Cyclops territory";
+mapName[4] = "Dark oak town";
+mapName[5] = "House of the dryads";
+mapName[6] = "Entrance to the world of illusions";
+mapName[7] = "Deadly sins district";
+mapName[8] = "High School of the nobility";
+mapName[9] = "Hideout of fairy cats";
+mapName[10] = "Road to the Heavenly Kingdom";
+mapName[11] = "Street of the wise";
+mapName[12] = "City center";
+mapName[13] = "Noble district tower";
+mapName[14] = "Castle of smile thieves";
+mapName[15] = "Floral outer city";
+mapName[16] = "Scent park";
+mapName[17] = "Harbor lighthouse";
+mapName[18] = "Main port";
+mapName[19] = "Meadow";
+mapName[20] = "Forest of tall trees";
+mapName[21] = "Abandoned cabin";
+mapName[22] = "Fishermen port";
+mapName[23] = "Wizard council tower";
+mapName[24] = "Herbalist shop";
+
+//bloqued paths
+var blockedPathMessages = [];
+
+blockedPathMessages[0] = "You cannot leave the region without first completing your mission.";
+blockedPathMessages[1] = "You cannot leave the region without first completing your mission.";
+blockedPathMessages[2] = "You cannot leave the region without first completing your mission.";
+blockedPathMessages[3] = "You cannot leave the region without first completing your mission.";
+blockedPathMessages[4] = "You cannot leave the region without first completing your mission.";
+blockedPathMessages[5] = "You cannot leave the region without first completing your mission.";
+blockedPathMessages[6] = "";
+blockedPathMessages[7] = "";
+blockedPathMessages[8] = "";
+blockedPathMessages[9] = "You cannot leave the region without first completing your mission.";
+blockedPathMessages[10] = "You cannot leave the region without first completing your mission.";
+blockedPathMessages[11] = "";
+blockedPathMessages[12] = "";
+blockedPathMessages[13] = "";
+blockedPathMessages[14] = "You cannot leave the region without first completing your mission.";
+blockedPathMessages[15] = "You cannot leave the region without first completing your mission.";
+blockedPathMessages[16] = "";
+blockedPathMessages[17] = "";
+blockedPathMessages[18] = "";
+blockedPathMessages[19] = "You cannot leave the region without first completing your mission.";
+blockedPathMessages[20] = "You cannot leave the region without first completing your mission.";
+blockedPathMessages[21] = "You cannot leave the region without first completing your mission.";
+blockedPathMessages[22] = "You cannot leave the region without first completing your mission.";
+blockedPathMessages[23] = "You cannot leave the region without first completing your mission.";
+blockedPathMessages[24] = "You cannot leave the region without first completing your mission.";
+
+var helpMessages = [];
+
+helpMessages[0] = "";
+helpMessages[1] = "";
+helpMessages[2] = "";
+helpMessages[3] = "";
+helpMessages[4] = "";
+helpMessages[5] = "";
+helpMessages[6] = "";
+helpMessages[7] = "";
+helpMessages[8] = "";
+helpMessages[9] = "";
+helpMessages[10] = "";
+helpMessages[11] = "";
+helpMessages[12] = "";
+helpMessages[13] = "";
+helpMessages[14] = "";
+helpMessages[15] = "";
+helpMessages[16] = "";
+helpMessages[17] = "";
+helpMessages[18] = "";
+helpMessages[19] = "";
+helpMessages[20] = "";
+helpMessages[21] = "";
+helpMessages[22] = "";
+helpMessages[23] = "";
+helpMessages[24] = "";
+
+//Set the player's start location
+var mapLocation = 6;
+
+//Initialize the player's input
+var playersInput = "";
+
+//Initialize the gameMessage
+var gameMessage = "";
+
+//Create an array of action the game understands and a variable to store the current action
+var actionsIKnow = ["north", "east", "south", "west", "take", "drop", "use", "help"];
+var action = "";
+
+//Game Objects
+var items = ["whispering flower", "smell flower", "blind flower", "magic map", "golden key", "fishing rod"];
+var itemLocations = [2, 15, 16, 5, 21, 22];
+
+var itemsIKnow = ["magic map", "whispering flower", "smell flower", "blind flower", "golden key", "protection amulet", "invisibility potion", "magic sword", "death sword", "necronomicon", "fairy crown", "death enchantment", "fairy dust", "book of universe", "noble district pass", "castle pass", "fishing rod"];
+var item = "";
+
+//Backpack
+var backpack = [];
+
+//Image 
+var image = document.querySelector("img");
+
+//map image
+var displayMap = document.querySelector(".map");
+
+//The outputs elements
+var titleOutput = document.querySelector("#titleOutput");
+var outputDisplay = document.querySelector("#outputDisplay");
+
+//input element
+var input = document.querySelector("#input");
+
+
+//The buttons
+var takeButton = document.querySelector("#takeButton");
+takeButton.addEventListener("click", takeAction, false);
+
+var useButton = document.querySelector("#useButton");
+useButton.addEventListener("click", useAction, false);
+
+var dropButton = document.querySelector("#dropButton");
+dropButton.addEventListener("click", dropAction, false);
+
+var helpButton = document.querySelector("#helpButton");
+helpButton.addEventListener("click", helpAction, false);
+
+//Keys
+window.addEventListener("keydown", keydownHandler, false);
+
+//Backpakc display
+var backpackDisplay = document.querySelector("#backpackDisplay");
+
+//Game history checkpoints
+var herbalistShop = [];
+
+
+var gameStarted = false;
+var magicMapCatched = false;
+var whisperingFlowerCatched = false;
+var blindFlowerCatched = false;
+var smellFlowerCatched = false;
+var goldenKeyCatched = false;
+var fishingRodCatched = false;
+var bookOfUniverseCatched = false;
+var magicSwordGotIt = false;
+var giantHeadTest = false;
+var cyclopsIsDeath = false;
+var necronomiconDiscovered = false;
+var fairyCrownGiven = false;
+var fairyDustGotIt = false;
+var fairyDustSellIt = false;
+var nobleDistrictPass = false;
+var castlePass = false;
+var instantDeathEnchant = false;
+var castleGuardAdvice = false;
+var invisibilityPotionCrafted = false;
+var invisibilityPotionUsed = false;
+//display the player's location
+render();
+
+function render(){
+    input.style.display = "none";
+    input.value = "";
+
+    outputDisplay.innerHTML = "";
+
+    while(displayMap.firstChild){
+        displayMap.removeChild(displayMap.lastChild);
+    }
+
+    while(backpackDisplay.firstChild){
+        backpackDisplay.removeChild(backpackDisplay.lastChild);
+    }
+    
+
+    locationMessage(); 
+
+    //Render the location
+    titleOutput.innerHTML = mapName[mapLocation];
+    image.src = "assets/" + images[mapLocation];
+
+    var matchingItems = "";
+    
+    //Display the game message
+    outputDisplay.innerHTML += "<em>" + gameMessage + "</em>";
+
+    
+
+    //Display an item if there's one in this location
+    //1. Loop through all the game items
+    for (let i = 0; i < items.length; i++) {
+            
+            //Find out if there's an item at this location
+            if(mapLocation === itemLocations[i]){
+
+                //Display it
+                matchingItems += "<strong>" + items[i] + "</strong>, ";
+
+            }
+            
+        }
+
+    if(matchingItems !== ""){
+        outputDisplay.innerHTML += "<br><br>You see " + matchingItems.slice(0, -2) + " here.<br>";
+    }
+
+    //Display the player's backpack contents
+    if(backpack.length !== 0){
+        for (let i = 0; i < backpack.length; i++) {
+            var addBackDiv = document.createElement("div");
+            addBackDiv.style.width = "50px";
+            addBackDiv.style.height = "50px";
+            addBackDiv.style.float = "left";
+            
+            
+            var addBackImg = document.createElement("img");
+            addBackImg.style.width = "100%";
+            addBackImg.style.height = "100%";
+            addBackImg.style.objectFit = "fill";
+            addBackImg.src = "assets/objects/" + backpack[i] + ".png";
+            console.log(addBackImg.src);
+
+            addBackDiv.appendChild(addBackImg);
+            backpackDisplay.appendChild(addBackDiv);
+        }
+
+        
+    }
+
+    //Render Map
+    for (let i = 0; i < mapImages.length; i++) {
+        var addDiv = document.createElement("div");
+        addDiv.style.width = "150px";
+        addDiv.style.height = "150px";
+        addDiv.style.float = "left";
+        
+        var addimg = document.createElement("img");
+        addimg.src = mapImages[i];
+        addimg.style.objectFit = "fill";
+        addimg.style.width = "100%"
+        addimg.style.height = "100%"
+        addimg.style.filter = "brightness(30%)"
+        
+
+        if(i === mapLocation){
+            
+            addimg.animate([
+                {filter: "brightness(30%)"},
+                {filter: "brightness(100%)"}
+            ],{
+                duration: 1000,
+                iterations: 1
+            });
+
+            addimg.style.filter = "brightness(100%)";
+            
+
+        }
+
+        addDiv.appendChild(addimg);
+
+        displayMap.appendChild(addDiv);
+        
+    }
+
+}
+
+function actionRender(){
+    
+    input.style.display = "none";
+    input.value = "";
+
+    outputDisplay.innerHTML = "";
+
+    while(displayMap.firstChild){
+        displayMap.removeChild(displayMap.lastChild);
+    }
+
+    while(backpackDisplay.firstChild){
+        backpackDisplay.removeChild(backpackDisplay.lastChild);
+    }
+     
+
+    //Render the location
+    titleOutput.innerHTML = mapName[mapLocation];
+    image.src = "assets/" + images[mapLocation];
+
+    var matchingItems = "";
+    
+    //Display the game message
+    outputDisplay.innerHTML += "<em>" + gameMessage + "</em>";
+
+    
+
+    //Display an item if there's one in this location
+    //1. Loop through all the game items
+    for (let i = 0; i < items.length; i++) {
+            
+            //Find out if there's an item at this location
+            if(mapLocation === itemLocations[i]){
+
+                //Display it
+                matchingItems += "<strong>" + items[i] + "</strong>, ";
+
+            }
+            
+        }
+
+    if(matchingItems !== ""){
+        outputDisplay.innerHTML += "<br><br>You see " + matchingItems.slice(0, -2) + " here.<br>";
+    }
+
+    
+
+    
+
+    //Display the player's backpack contents
+    if(backpack.length !== 0){
+        for (let i = 0; i < backpack.length; i++) {
+            var addBackDiv = document.createElement("div");
+            addBackDiv.style.width = "50px";
+            addBackDiv.style.height = "50px";
+            addBackDiv.style.float = "left";
+            
+            
+            var addBackImg = document.createElement("img");
+            addBackImg.style.width = "100%";
+            addBackImg.style.height = "100%";
+            addBackImg.style.objectFit = "fill";
+            addBackImg.src = "assets/objects/" + backpack[i] + ".png";
+            console.log(addBackImg.src);
+
+            addBackDiv.appendChild(addBackImg);
+            backpackDisplay.appendChild(addBackDiv);
+        }
+
+        
+    }
+
+    //Render Map
+    for (let i = 0; i < mapImages.length; i++) {
+        var addDiv = document.createElement("div");
+        addDiv.style.width = "150px";
+        addDiv.style.height = "150px";
+        addDiv.style.float = "left";
+        
+        var addimg = document.createElement("img");
+        addimg.src = mapImages[i];
+        addimg.style.objectFit = "fill";
+        addimg.style.width = "100%"
+        addimg.style.height = "100%"
+        addimg.style.filter = "brightness(30%)"
+        
+
+        if(i === mapLocation){
+            
+            addimg.animate([
+                {filter: "brightness(30%)"},
+                {filter: "brightness(100%)"}
+            ],{
+                duration: 1000,
+                iterations: 1
+            });
+
+            addimg.style.filter = "brightness(100%)";
+            
+
+        }
+
+        addDiv.appendChild(addimg);
+
+        displayMap.appendChild(addDiv);
+        
+    }
+
+}
+
+function takeAction(){
+    action = "take";
+    input.style.display = "block";
+    input.value = "";
+    input.focus();
+    
+    
+}
+function useAction(){
+    action = "use";
+    input.style.display = "block";
+    input.value = "";
+    input.focus();
+}
+function dropAction(){
+    action = "drop";
+    input.style.display = "block";
+    input.focus();
+}
+function helpAction(){
+    action = "help";
+    
+    playGame();
+}
+
+
+
+function keydownHandler(event){
+
+    if (event.target.id === "input" && event.keyCode !== 13) {
+
+        return;
+        
+    }
+    
+
+    if (event.keyCode === 87){
+        action = "north";
+        playGame();
+    }
+    if (event.keyCode === 83){
+        action = "south";
+        playGame();
+    }
+    if (event.keyCode === 68){
+        action = "east";
+        playGame();
+    }
+    if (event.keyCode === 65){
+        action = "west";
+        playGame();
+    }
+    if (event.keyCode === 84){
+        takeAction();
+        event.preventDefault();
+        
+    }
+    if (event.keyCode === 84){
+        takeAction();
+        event.preventDefault();
+        
+    }
+    if (event.keyCode === 85){
+        useAction();
+        event.preventDefault();
+        
+    }
+    if (event.keyCode === 80){
+        dropAction();
+        event.preventDefault();
+        
+    }
+    if (event.keyCode === 72){
+        action = "help";
+        playGame();
+        
+        
+    }
+    if (event.keyCode === 13){
+        if (action === "take") {
+            console.log("take");
+            takeItem();
+            action = "";
+            
+        }
+        if (action === "use") {
+            console.log("use");
+            useItem();
+            action = "";
+        }
+        if (action === "drop") {
+            console.log("drop");
+            dropItem();
+            action = "";
+
+        }
+
+    }
+}
+
+function playGame(){
+
+    //Reset these varieables from the previosu turn
+    gameMessage = "";
+    outputDisplay.innerHTML = "";
+    
+    
+    
+
+    //Figure out the item the player wants
+    for (let i = 0; i < itemsIKnow.length; i++){
+        if(playersInput.indexOf(itemsIKnow[i]) !== -1){
+
+            item = itemsIKnow[i];
+            console.log("player's item: " + item);
+
+        }
+    }
+
+    //Choose the correct action
+    switch(action){
+
+        case "north":
+            if(mapLocation >= 5){
+                mapLocation -= 5;
+                render();
+            } else {
+                gameMessage = blockedPathMessages[mapLocation];
+                actionRender();
+            }
+            break;
+        
+        case "east":
+            if (mapLocation % 5 != 4){
+                mapLocation += 1;
+                render();
+            } else {
+                gameMessage = blockedPathMessages[mapLocation];
+                actionRender();
+            }
+            break;
+            
+        case "south":
+            if (mapLocation < 20){
+                mapLocation += 5;
+                render();
+            } else {
+                gameMessage = blockedPathMessages[mapLocation];
+                actionRender();
+            }
+            break;
+
+        case "west":
+            if(mapLocation % 5 != 0){
+                mapLocation -= 1;
+                render();
+            } else {
+                gameMessage = blockedPathMessages[mapLocation];
+                actionRender();
+            }
+            break;
+
+        case "take":
+            takeItem();
+            item = "";
+            break;
+
+        case "drop":
+            dropItem();
+            item = "";
+            break;
+
+        case "use":
+            useItem();
+            break;
+
+        case "help":
+            if(helpMessages[mapLocation] !== ""){
+
+                gameMessage = helpMessages[mapLocation] + " ";
+
+            }
+            gameMessage += "Try any of these words: ";
+            gameMessage += "north, east, south, west, take, drop, use";
+            actionRender();
+            break;
+
+        default:
+            gameMessage = "I don't understand that.";
+            actionRender();
+
+    }
+
+    
+    
+    action = "";
+
+}
+
+function takeItem(){
+
+    getInput();
+
+    var itemIndexNumber = items.indexOf(item);
+
+    if(itemIndexNumber !== -1 && itemLocations[itemIndexNumber] === mapLocation){
+
+        switch (item) {
+            case "magic map":
+                gameMessage = "The map is thrown at your face and up your nose. You don't know how, but now you can see the map of the region without needing one.";
+
+                items.splice(itemIndexNumber, 1);
+                itemLocations.splice(itemIndexNumber, 1);
+
+                displayMap.style.display = "block";
+
+                magicMapCatched = true;
+                
+                break;
+            case "whispering flower":
+                gameMessage = "You take the " + item + ".";
+
+                backpack.push(item);
+
+                items.splice(itemIndexNumber, 1);
+                itemLocations.splice(itemIndexNumber, 1);
+
+                whisperingFlowerCatched = true;
+                
+                break;
+            case "blind flower":
+                gameMessage = "You take the " + item + ".";
+
+                backpack.push(item);
+
+                items.splice(itemIndexNumber, 1);
+                itemLocations.splice(itemIndexNumber, 1);
+
+                blindFlowerCatched = true;
+                
+                break;
+            case "smell flower":
+                gameMessage = "You take the " + item + ".";
+
+                backpack.push(item);
+
+                items.splice(itemIndexNumber, 1);
+                itemLocations.splice(itemIndexNumber, 1);
+
+                smellFlowerCatched = true;
+                
+                break;
+            case "golden key":
+                gameMessage = "You take the " + item + ".";
+
+                backpack.push(item);
+
+                items.splice(itemIndexNumber, 1);
+                itemLocations.splice(itemIndexNumber, 1);
+
+                goldenKeyCatched = true;
+                
+                break;
+            case "fishing rod":
+                gameMessage = "You take the " + item + ".";
+
+                backpack.push(item);
+
+                items.splice(itemIndexNumber, 1);
+                itemLocations.splice(itemIndexNumber, 1);
+
+                fishingRodCatched = true;
+                
+                break;
+        
+            default:
+                gameMessage = "You take the " + item + ".";
+
+                backpack.push(item);
+
+                items.splice(itemIndexNumber, 1);
+                itemLocations.splice(itemIndexNumber, 1);
+
+                break;
+        }
+        
+         
+
+    } else {
+
+        gameMessage = "You can't do that.";
+
+    }
+
+    actionRender();
+
+}
+
+function dropItem(){
+
+    getInput();
+
+    if (backpack.length !== 0){
+
+        var backpackIndexNumber = backpack.indexOf(item);
+
+        if (backpackIndexNumber !== -1){
+
+            gameMessage = "You drop the " + item + ".";
+
+            items.push(backpack[backpackIndexNumber]);
+            itemLocations.push(mapLocation);
+
+            backpack.splice(backpackIndexNumber, 1);
+
+        } else {
+
+            gameMessage = "You can't do that.";
+
+        }
+
+    } else {
+
+        gameMessage = "You're not carrying anything.";
+
+    }
+
+    actionRender();
+
+}
+
+function useItem(){
+    getInput();
+
+    var backpackIndexNumber = backpack.indexOf(item);
+
+    if (backpackIndexNumber === -1) {
+        
+        gameMessage = "You're not carrying it.";
+
+    }
+
+    if (backpack.length === 0) {
+        
+        gameMessage = "Your backpack is empty.";
+
+    }
+
+    if (backpackIndexNumber !== -1){
+
+        switch(item){
+
+            case "whispering flower":
+                if (mapLocation === 24) {
+                    
+
+                    if (herbalistShop.length === 2) {
+                        herbalistShop.push("whispering flower");
+
+                        gameMessage = "Owner: Thanks for the last flower, now I can create the invisibility potion.";
+
+                        backpack.splice(backpackIndexNumber, 1);
+
+                        items.push("invisibility potion");
+                        itemLocations.push(mapLocation);
+                        
+                    } else if (herbalistShop.length === 1){
+                        herbalistShop.push("whispering flower");
+
+                        gameMessage = "Owner: Now only the last flower is missing. I have heard that the last flower is in the west.";
+
+                        backpack.splice(backpackIndexNumber, 1);
+
+                    } else if (herbalistShop.length === 0) {
+                        herbalistShop.push("whispering flower");
+
+                        gameMessage = "Owner: Well, this is the first flower, keep going sir. I've heard that the two remaining flowers are close to each other to the west.";
+
+                        backpack.splice(backpackIndexNumber, 1);
+
+                    }
+                    
+                } else if (mapLocation === 0 || mapLocation === 3){
+
+                    gameMessage = "Yo're DEATH!";
+                    gameOver();
+
+                } else {
+
+                    gameMessage = "Do you want to waste such a valuable resource? Moron.";
+
+                }
+                break;
+
+            case "smell flower":
+                if (mapLocation === 24){
+
+                    if (herbalistShop.length === 2) {
+                        herbalistShop.push("smell flower");
+
+                        gameMessage = "Owner: Thanks for the last flower, now I can create the invisibility potion.";
+
+                        backpack.splice(backpackIndexNumber, 1);
+
+                        items.push("invisibility potion");
+                        itemLocations.push(mapLocation);
+                        
+                    } else if (herbalistShop.length === 1){
+                        herbalistShop.push("smell flower");
+
+                        if (herbalistShop[0] === "whispering flower"){
+
+                            gameMessage = "Owner: Now only the last flower is missing. I have heard that the last flower is in the west.";
+
+                        } else {
+
+                            gameMessage = "Owner: Now only the last flower is missing. I've heard that the last flower is in the north.";
+
+                        }
+
+                        
+
+                        backpack.splice(backpackIndexNumber, 1);
+
+                    } else if (herbalistShop.length === 0) {
+                        herbalistShop.push("smell flower");
+
+                        gameMessage = "Owner: Well, this is the first flower, keep going sir. I have heard that the remaining two flowers are far from each other.";
+
+                        backpack.splice(backpackIndexNumber, 1);
+
+                    }
+
+                } else if (mapLocation === 0 ||mapLocation === 3){
+
+                    gameMessage = "Yo're DEATH!";
+                    gameOver();
+
+                } else {
+
+                    gameMessage = "Do you want to waste such a valuable resource? Moron.";
+
+                }
+                break;
+
+            case "blind flower":
+                if (mapLocation === 24){
+
+                    if (herbalistShop.length === 2) {
+                        herbalistShop.push("blind flower");
+
+                        gameMessage = "Owner: Thanks for the last flower, now I can create the invisibility potion.";
+
+                        backpack.splice(backpackIndexNumber, 1);
+
+                        items.push("invisibility potion");
+                        itemLocations.push(mapLocation);
+                        
+                    } else if (herbalistShop.length === 1){
+                        herbalistShop.push("blind flower");
+
+                        if (herbalistShop[0] === "whispering flower"){
+
+                            gameMessage = "Owner: Now only the last flower is missing. I have heard that the last flower is in the west.";
+
+                        } else {
+
+                            gameMessage = "Owner: Now only the last flower is missing. I've heard that the last flower is in the north.";
+
+                        }
+
+                        
+
+                        backpack.splice(backpackIndexNumber, 1);
+
+                    } else if (herbalistShop.length === 0) {
+                        herbalistShop.push("blind flower");
+
+                        gameMessage = "Owner: Well, this is the first flower, keep going sir. I have heard that the remaining two flowers are far from each other.";
+
+                        backpack.splice(backpackIndexNumber, 1);
+
+                    }
+
+                } else if (mapLocation === 0 ||mapLocation === 3){
+
+                    gameMessage = "Yo're DEATH!";
+                    gameOver();
+
+                } else {
+
+                    gameMessage = "Do you want to waste such a valuable resource? Moron.";
+
+                }
+                break;
+            
+            case "invisibility potion":
+                if (mapLocation === 23) {
+                    
+                    gameMessage = "You have avoided the guards and have reached the top of the tower, on a sideboard you see an amulet with a large amount of magical power. You think you should take it, since you won't get a second chance.";
+
+                    backpack.splice(backpackIndexNumber, 1);
+
+                    items.push("protection amulet");
+                    itemLocations.push(mapLocation);
+                    invisibilityPotionCrafted = true;
+                    invisibilityPotionUsed = true;
+
+                } else {
+
+                    gameMessage = "Do you want to waste such a valuable resource? Moron.";
+
+                }
+                break;
+
+            case "protection amulet":
+                if (mapLocation === 0){
+
+                    gameMessage = "Well done, you have withstood my attack. I wonder if you with this magic sword could kill my tiranic brother... He might have something that would help in your adventure.";
+
+                    items.push("magic sword");
+                    itemLocations.push(mapLocation);
+
+                    giantHeadTest = true;
+                    magicSwordGotIt = true;
+
+                } else if (mapLocation === 3){
+
+                    gameMessage = "Racksour: I see that you can resist my attacks, but nothing else. This is boring, come back when you stop being a turtle in its shell.";
+
+                } else {
+
+                    gameMessage = "You use the amulet, but there is nothing to protect yourself from.";
+
+                }
+                break;
+
+            case "magic sword":
+                if (mapLocation === 3 && !cyclopsIsDeath) {
+                    
+                    gameMessage = "Racksour: Oh, wow. You have defeated me. I didn't expect to find such a strong opponent. Here's what I took from those insects.";
+
+                    items.push("fairy crown");
+                    itemLocations.push(mapLocation);
+                    cyclopsIsDeath = true;
+
+                } else if (mapLocation === 3 && cyclopsIsDeath){
+
+                    gameMessage = "You don't have to do anything else in this place";
+
+                }else if (mapLocation === 14 && castlePass){
+
+                    gameMessage = "King of Sadness: You are a disbeliever, did you expect that with that sword you would do something to me? All you've ever done was tickle, now die.";
+
+                    gameMessage += "<br>You're DEAD!";
+
+                    gameOver();
+
+                } else if (mapLocation === 12){
+
+                    if (instantDeathEnchant) {
+                        
+                        gameMessage = "Dwarf blacksmith: I don't know what you intend to do with this sword of death, but I don't want to know anything about it. ";
+
+                        backpack.splice(backpackIndexNumber, 1);
+
+                        items.push("death sword");
+                        itemLocations.push(mapLocation);
+
+                    }
+
+                } else {
+
+                    gameMessage = "I'm not the type of person who kills just because.";
+
+                }
+                break;
+
+            case "fishing rod":
+                if (mapLocation === 22) {
+
+                    var getBookOfUniverse = 8;
+                    var fishNumber = Math.floor(Math.random() * 10);
+                    console.log(fishNumber);
+                    
+                    if (fishNumber >= getBookOfUniverse) {
+
+                        gameMessage = "Look, this book seems important... I don't know if those rancid savants are going to like it."
+
+                        items.push("book of universe");
+                        itemLocations.push(mapLocation);
+                        
+                    } else {
+                        if (fishNumber === 0)
+                            gameMessage = "I've caught a piece of trash.";
+                        else if (fishNumber === 1)
+                            gameMessage = "I've caught a old boot.";
+                        else if (fishNumber === 2)
+                            gameMessage = "I've caught a plastic bottle.";
+                        else if (fishNumber === 3)
+                            gameMessage = "I've caught a little useful fish.";
+                        else if (fishNumber === 4)
+                            gameMessage = "I've caught a tampon.";
+                        else if (fishNumber === 5)
+                            gameMessage = "I've caught a used prophylactic.";
+                        else if (fishNumber === 6)
+                            gameMessage = "I've caught a beautiful broken watch.";
+                        else if (fishNumber === 7)
+                            gameMessage = "I've caught a sticky turd.";
+                    }
+                    
+                } else {
+
+                    gameMessage = "It doesn't look like you can catch anything here.";
+
+                }
+                break;
+            
+            case "golden key":
+                if (mapLocation === 1) {
+
+                    gameMessage = "You have opened the chest.";
+                    gameMessage += "I think I could trade this book in the cursed neighborhood.";
+
+                    backpack.splice(backpackIndexNumber, 1);
+
+                    items.push("necronomicon");
+                    itemLocations.push(mapLocation);
+                    necronomiconDiscovered = true;
+                    
+                } else {
+
+                    gameMessage = "This key looks like it's not going to open anything normal.";
+
+                }
+                break;
+
+            case "necronomicon":
+                if (mapLocation === 7) {
+
+                    gameMessage = "With the help of the followers of the deadly sins, you have learned the instant death charm.";
+
+                    backpack.splice(backpackIndexNumber, 1);
+                    
+                    instantDeathEnchant = true;
+                    
+                } else {
+
+                    gameMessage = "This isn't an object that you can show off";
+
+                }
+                break;
+
+            case "death sword":
+                if (mapLocation === 3 && !cyclopsIsDeath) {
+                    
+                    gameMessage = "Racksour: You're not supposed to have that sword... This is so unfair.";
+
+                    items.push("fairy crown");
+                    itemLocations.push(mapLocation);
+
+                } else if (mapLocation === 3 && cyclopsIsDeath){
+
+                    gameMessage = "You don't have to do anyithing else in this place.";
+
+                }else if (mapLocation === 14 && castlePass){
+
+                    gameMessage = "King of Sadness: Where did you get this sword? It was supposed to be destroyed! I curse you and all the people of this kingdom...";
+
+                    gameMessage += "<br>You WIN!";
+
+                    gameWin();
+
+                } else if (mapLocation === 14 && !castlePass && !castleGuardAdvice) {
+
+                    gameMessage = "Castle guard: This is the first advice, another one and you're death!";
+
+                    castleGuardAdvice = true;
+                    
+                } else if (mapLocation === 14 && !castlePass && castleGuardAdvice) {
+
+                    gameMessage = "I've told you! Prepare you to die!!!";
+                    gameMessage += "You're DEAT!";
+
+                    gameOver();
+                    
+                } else {
+
+                    gameMessage = "This is too powerful a sword to swing carelessly around.";
+
+                }
+                break;
+
+            case "book of universe":
+                if (mapLocation === 11) {
+
+                    gameMessage = "Finally, I handed over the book of the universe and received the pass to the noble district. As I walked towards it, I wondered if I had made the right choice.";
+                    gameMessage += "You've got the noble distric pass!";
+
+                    backpack.splice(backpackIndexNumber, 1);
+
+                    nobleDistrictPass = true;
+                    
+                } else {
+
+                    gameMessage = "This book is too complex for ordinary people and useless for magicians... I would have to look for someone with a lot of knowledge...";
+
+                }
+                break;
+
+            case "fairy crown":
+                if (mapLocation === 9) {
+
+                    gameMessage = "Fairy soldier: My God! Our savior has arrived, let us reward you with our most precious possession.";
+
+                    backpack.splice(backpackIndexNumber, 1);
+
+                    items.push("fairy dust");
+                    itemLocations.push(mapLocation);
+
+                    fairyCrownGiven = true;
+                    
+                } else {
+
+                    gameMessage = "This item is not valuable to ordinary people... only to tiny magical beings with wings.";
+
+                }
+                break;
+
+            case "fairy dust":
+                if (mapLocation === 13 && nobleDistrictPass) {
+
+                    gameMessage = "Thanks to the fairy dust they gave you the castle pass... Now you can enter without worry.";
+
+                    backpack.splice(backpackIndexNumber, 1);
+
+                    castlePass = true;
+                    fairyDustSellIt = true;
+                    
+                } else if (mapLocation === 13 && !nobleDistrictPass) {
+
+                    gameMessage = "Door guard: Hey you get out of here, you piece of shit!";
+                    
+                } else {
+
+                    gameMessage = "Surely in an area with more power this would be more useful...";
+
+                }
+                break;
+
+            default:
+                gameMessage = "You don't have this item";
+                break;
+
+
+
+        }
+
+    }
+
+
+    actionRender();
+}
+
+function getInput(){
+
+    var playersInput = input.value;
+    playersInput = playersInput.toLowerCase();
+
+    //Figure out the item the player wants
+    for (let i = 0; i < itemsIKnow.length; i++) {
+            if(playersInput.indexOf(itemsIKnow[i]) !== -1)
+            {
+                item = itemsIKnow[i];
+                console.log("player's item: " + item);
+            }
+            
+        }
+
+}
+ 
+function gameOver(){
+
+    window.alert("HA HA HA you Loooose!");
+
+    location.reload();
+    
+}
+
+function gameWin(){
+
+    window.alert("You win little assassin! Well played!");
+
+    location.reload();
+
+}
+
+function locationMessage(){
+
+    switch (mapLocation) {
+        case 0:
+            if (!giantHeadTest) {
+                
+                gameMessage = "In front of you stands an imposing giant head, carved in hard stone and as cold as ice. The challenge it presents is to withstand a strong blow from it without dying in the attempt. If you manage to resist without losing your life, you will obtain the coveted reward: the magic sword. Prepare for the test and show your bravery and strength.";
+
+                gameMessage += "<br><br>Maybe if you have something to protect you...";
+
+            } else if (giantHeadTest){
+
+                gameMessage = "Glad to see you againt my little friend, have a nice day.";
+
+            } else if (giantHeadTest && cyclopsIsDeath){
+
+                gameMessage = "Oh my god! You did it! Thank you very much my little friend, now i will be in peace for the rest of my life!"
+
+            }
+            
+            break;
+        case 1:
+            if (!necronomiconDiscovered){
+
+                gameMessage = "As you venture into the cave of souls, you perceive an unsettling energy that makes you feel watched. As you cautiously move forward, you discover a mysterious chest hidden behind a rock. The golden lock shines brightly, challenging you to open it. Will you be able to unveil its contents and make it out of the cave alive?";
+
+                gameMessage += "<br><br>It seems like you need a key...";
+
+                
+
+            } else if (necronomiconDiscovered){
+
+                gameMessage = "When you re-enter the cave, you no longer feel that you are being watched. You leave because you can't find anything...";
+
+            }
+            
+            break;
+        case 2:
+            if (!whisperingFlowerCatched) {
+
+                gameMessage = "As you walk along a silent path, you hear an unintelligible murmur that seems to come out of nowhere. As you approach, you realize that it is a flower that emits incomprehensible sounds. Could the flower be trying to communicate with you in some way? You remain silent, trying to decipher its message and uncover the secret it hides inside.";
+
+                gameMessage += "<br><br>Maybe it will be useful for alchemy...";
+                
+            } else if (whisperingFlowerCatched) {
+                
+                gameMessage = "This silence of this place lives up to its name.";
+
+            }
+            
+            break;
+        case 3:
+            if (!cyclopsIsDeath){
+
+                gameMessage = "In the cyclops territory, you come across its brother, another imposing giant head. He asks you what you have come to do there, while his cold gaze scrutinizes you. A thought crosses your mind: could you kill him if you wanted to? But you realize it wouldn't be easy, as his strength and power are evident. You decide to respond cautiously, trying to get out of the situation unscathed.";
+
+                gameMessage += "<br><br>Maybe if i destroy her eyes with something sharpen...";
+
+            } else if (cyclopsIsDeath) {
+                
+                gameMessage = "You find yourself dead head being eaten by nature.";
+
+            }
+            
+            break;
+        case 4:
+
+            gameMessage = "Dark Oak Town is a fantastic medieval village located in a lush forest surrounded by high stone walls and a deep moat. Its cobbled streets are lit by wrought iron lanterns, creating a mysterious atmosphere. In the center of the town stands a majestic stone castle with imposing towers and a water-filled moat at its base. The economy of the village is based on agriculture and craftsmanship, and its weekly market attracts traders from all over the region. Despite its beauty, it is rumored that the town is cursed and many avoid it for fear of the dark secrets hidden behind its walls.";            
+            
+            break;
+        case 5:
+            if (!magicMapCatched) {
+
+                gameMessage = "As you venture into the forest of dryads, you hear a soft murmur that seems to come from the trees. Suddenly, something moves around you and you feel a magical energy enveloping you. You discover that it is a magical map that will show you the paths to hidden treasures and secret places in the forest.";
+
+                gameMessage += "<br><br>Maybe i should take with me..."
+                
+            } else if (magicMapCatched) {
+                
+                gameMessage = "You think you have never seen such a beautiful forest.";
+
+            }
+            
+            break;
+        case 6:
+            if (!gameStarted) {
+
+                gameMessage = "<strong>Welcome to the last murder</strong>"
+                
+                gameMessage += "<br><br>You are a hitman hired to take out the King of Sadness, a powerful and cruel man in the world of organized crime. Jack is an expert in martial arts, strategy, and manipulation, allowing him to meticulously plan his mission. However, he doesn't know that his target won't be easy to eliminate. a hitman hired to take out the King of Sadness, a powerful and cruel man in the world of organized crime. Jack is an expert in martial arts, strategy, and manipulation, allowing him to meticulously plan his mission. However, he doesn't know that his target won't be easy to eliminate.";
+                gameMessage += "<br><br><strong>INSTRUCTIONS</strong>";
+                gameMessage += "<br><br><strong>Movement:</strong>";
+                gameMessage += "<br>North = key W";
+                gameMessage += "<br>East = key D";
+                gameMessage += "<br>South = key W";
+                gameMessage += "<br>West = key A";
+                gameMessage += "<br><br><strong>Actions:</strong>";
+                gameMessage += "<br>Take item = key T";
+                gameMessage += "<br>Use item = key U";
+                gameMessage += "<br>Drop item = key P";
+                gameMessage += "<br>Submit item = key Enter";
+                gameMessage += "<br>Help = key H (Note: under development)";
+                gameMessage += "<br><br>Also if you move the cursos over the backpack items, they got bigger for better seeing."
+
+                gameStarted = true;
+
+            } else {
+
+                gameMessage = "I'm back to the start."
+
+            }
+            
+            break;
+        case 7:
+            if (!necronomiconDiscovered) {
+                
+                gameMessage = "You find yourself in the city's district of the seven deadly sins, overhearing whispers about a search for the Necronomicon. The atmosphere is tense and ominous, with shady characters lurking in every corner. You can feel the weight of the ancient tome's power and the danger that its discovery could bring. As you make your way through the district, you can't help but wonder what dark forces are at play and what horrors the Necronomicon may unleash.";
+
+                gameMessage += "<br><br>Maybe I can get something for these..."
+
+            } else if (necronomiconDiscovered){
+
+                gameMessage = "As they notice that I have the Necronomicon with me, they offer me knowledge in exchange for the book. I weigh the risks and rewards in my mind, wondering if I should give it up or not. The power of the ancient tome is palpable, and the thought of giving it away is unsettling. In the end, I make my decision and either hand it over or keep it close, knowing that its secrets are mine alone to keep.";
+
+            } else if (instantDeathEnchant){
+
+                gameMessage = "Now when I walk by, these weird people look at me with respect and appreciation. I don't know if I did the right thing by giving it to him."
+
+            }
+            
+            break;
+        case 8:
+
+            gameMessage = "From my vantage point, I can see the majesty of the Noble Institute. The high stone walls, ornamented with gothic details, rise towards the sky, echoing the grandeur of the kingdom in which it is located. A large wrought iron door opens before me, guarded by two armed guards who look imposing in their shining armor. Upon entering, I can see the wide corridors filled with noble students, some in groups, engaged in lively discussion, while others move solo, lost in their own thoughts. From the windows, sunlight pours in and bathes the halls in warm light. The sounds of clashing weapons and laughter of the students mix in the air, creating a sense of life and energy in this place. As I walk, I can smell the food being prepared in the dining hall and see the luxurious beds in the residence rooms, which makes me think of the comfort and elegance experienced by the nobility here.";
+            
+            break;
+        case 9:
+            if (!cyclopsIsDeath) {
+
+                gameMessage = "While walking through the forest, I discovered a cat fairy town. The architecture was impressive and the city looked very pretty. However, I noticed that the people seemed sad and downcast. I wondered what could be causing their grief and if there was anything I could do to help them. Despite its sadness, I was captivated by the beauty of the city and decided to explore it further.";
+                
+            } else if (cyclopsIsDeath){
+
+                gameMessage = "When the fairy cat city guards saw me wearing the crown, they approached me with a happy expression on their faces. They asked me if I would be willing to return it. I was surprised at their reaction, but quickly understood that the crown was an important item to them.";
+
+            } else if (fairyCrownGiven){
+
+                gameMessage = "As always since I returned the crown to them, they are very happy to see me. Seems like a place I could retire to.";
+
+            }
+            
+            break;
+        case 10:
+
+            gameMessage = "The path to the celestial kingdom is bright and filled with peace. Sun rays illuminate a path of flowers and green grass that stretches toward the horizon. The air is fresh and gentle, and the singing of birds and the fragrance of flowers fill the atmosphere. The path is straight and narrow, but feels wide and comfortable, with a sense of eternity in every step. Each step brings the traveler closer to a realm of beauty and harmony that seems to be beyond time and space.";
+            
+            break;
+        case 11:
+            if (!bookOfUniverseCatched){
+
+                gameMessage = "Walking down the street of wisdom in the city, I came across a wise man in an alleyway. He told me that if I ever find the book of the universe, he could trade it for a pass to the noble district. I pondered on his offer as I continued on my way, wondering if I would ever come across such a book and whether it would be worth making that trade. The idea of entering the noble district was tempting, but I also wondered if I would be willing to part with something as valuable as the book of the universe.";
+
+            } else if (bookOfUniverseCatched){
+
+                gameMessage = "The wise man recognized me and noticed that I was there to exchange the book. He looked at me intently and asked if I was sure I wanted to make that trade. His deep and wise gaze made me reflect on my decision.";
+
+            } else if (nobleDistrictPass){
+
+                gameMessage = "Every time I pass by here, the wise man greets me with a wide grin. He seems to remember our encounter and the exchange of the book of the universe. Sometimes, I stay and chat with him for a while, listening to his wise words and reflecting on what he says. It's comforting to know that there are wise and kind people in the world who remind us that there is much to learn.";
+
+            }
+            
+            break;
+        case 12:
+            if (!magicSwordGotIt) {
+
+                gameMessage = "While strolling through the city center, I came across a blacksmith's shop and decided to go in. The blacksmith greeted me warmly and explained that he was capable of creating magical weapons. He showed me some of his creations, beautiful yet deadly, and told me the stories behind each of them. I was impressed by his skill and began to consider the possibility of having my own magical weapon.";
+                
+            } else if (magicSwordGotIt && !instantDeathEnchant){
+
+                gameMessage = "Upon returning to the blacksmith's shop with the sword that the giant head had given me, the blacksmith examined the sword and told me that it had mediocre enchantments. He explained that, in order to improve it, the customer had to bring the enchantments they wanted to apply to the sword. I felt a little disappointed that the sword wasn't as powerful as I thought, but at the same time excited about the possibility of making it even better. I decided to research and find the appropriate enchantments to make my sword a more formidable tool.";
+
+            } else if ( magicSwordGotIt && instantDeathEnchant){
+
+                gameMessage = "After searching for the appropriate enchantment for my sword, I returned to the blacksmith's shop. When I showed him the enchantment, he was horrified and told me that it shouldn't be possible. But then, with a more serious expression, he offered to improve the sword with the enchantment I had brought him. He warned me that it was a dangerous task, but I was determined to make my sword even more powerful. I accepted the offer and left the sword in the blacksmith's hands, eagerly waiting for the outcome.";
+
+            } else {
+
+                gameMessage = "Since the blacksmith enchanted my sword, he has been more respectful towards me. It seems like he is now afraid of me, but he is still as kind as ever. Maybe it's because he now knows that I have a powerful sword, or maybe it's because he has discovered that I have knowledge of enchantments. Either way, I am grateful for his help and continue to be a regular customer at his blacksmith shop.";
+
+            }
+            
+            break;
+        case 13:
+            if (!nobleDistrictPass) {
+
+                gameMessage = "I am outside the district of the nobles and want to enter, but the guards won't let me in because I don't have the proper pass. I tried to explain to them that I had important business inside, but they were inflexible and asked me to leave. I feel frustrated and trapped in the common area, unable to access the district of the nobles where influential people and business opportunities reside.";
+                
+            } else if (nobleDistrictPass && !fairyDustGotIt) {
+
+                gameMessage = "Now that I have the pass, the guards have quieted down and let me through. As I walk around, I hear that fairy dust is very popular among the upper class because it causes euphoria and hallucinations when consumed. They seem desperate to find sellers who can provide them with the dust. This makes me think about the business opportunities and how I could benefit from this demand. However, I'm also concerned about the safety and risks involved in selling such a dangerous substance.";
+                
+            } else if (nobleDistrictPass && fairyDustGotIt){
+
+                gameMessage = "I have returned to the noble district with the fairy dust, and from the way the nobles are looking at me, it seems like they know I have something valuable with me. A particularly desperate noble approaches me and offers a pass to the castle in exchange for the dust. I'm considering accepting his offer, as access to the castle could be very valuable in the future. But I also have to be careful not to get caught by the authorities or the guards patrolling the area.";
+
+            } 
+             if (fairyDustSellIt){
+
+                gameMessage = "I like to stroll around the noble district, but there are a lot of people consumed by fairy dust. I don't think I want to contribute to this problem by selling more of it. Additionally, I'm concerned that it could draw attention from authorities if they see me selling illegal substances. Therefore, I prefer to keep the fairy dust with me and look for a safer and legal way to use it."
+
+            }
+            
+            break;
+        case 14:
+            if (!castlePass) {
+
+                gameMessage = "I'm walking outside the castle and it's impressive. The guards are looking at me with a expression that seems to indicate they won't let me pass. Although I don't have a specific reason to want to enter the castle, I can't help but feel curious about what lies behind its walls. Perhaps I should find a plausible excuse to justify my presence there.";
+                
+            } else if (!castlePass && castleGuardAdvice) {
+
+                gameMessage = "The guards have already warned me and are approaching me with their weapons drawn. I have to either flee or defend myself. As I assess the situation, I realize that fighting them would be a risky move, and my best option is to retreat and come up with a new plan to achieve my objective. I quickly turn around and start running in the opposite direction, hoping to lose them in the crowded streets.";
+
+            } else if (castlePass){
+
+                gameMessage = "I hand over my pass to the guards, and they verify it before allowing me to pass through without any trouble. As I walk towards the king's chamber, my heart beats faster with the anticipation of what I am about to do. I have planned this for a long time, and now I am so close to achieving my goal. I take a deep breath and steady myself as I prepare to confront the king.";
+
+            }
+            
+            break;
+        case 15:
+            if (!smellFlowerCatched) {
+
+                gameMessage = "You are in the floral village on the outskirts, which has an impressively good aroma, but suddenly a horrendous smell hits your nose. You look around to find its source and come across a flower that emits the foul odor.";
+
+                gameMessage += "<br><br>To you, it's seems like it would be an ingredient for alchemy, maybe you have to take it.";
+                
+            } else if (smellFlowerCatched){
+
+               gameMessage = "Thanks to you taking the flower, now you can enjoy the beautiful aroma that the town gives off while you walk. The fragrance of flowers can be a very pleasant sensory experience and can improve your mood. So, thank you for taking that flower with you and allowing yourself to enjoy this wonderful sensation."; 
+
+            }
+            
+            break;
+        case 16:
+            if (!blindFlowerCatched) {
+                
+                gameMessage = "Upon entering the essence park, you are struck by its beauty. Suddenly, you notice that your vision becomes blurry in a particular direction. Intrigued, you head over there and discover a flower that appears to be pixelated. As you approach, you realize that the flower has a unique and fascinating beauty, despite its digital appearance. This experience makes you reflect on the interaction between nature and technology.";
+
+                gameMessage += "<br><br>To you, it's seems like it would be an ingredient for alchemy, maybe you have to take it.";
+
+            } else if (smellFlowerCatched){
+
+                gameMessage = "Now you can stroll through the park and see the families enjoying a wonderful day. The children run and laugh as the parents chase them and hug them. The sun shines in the sky and the wind blows gently, creating a relaxed and happy atmosphere. It is comforting to see people enjoying nature and sharing happy moments with their loved ones.";
+
+            }
+            
+            break;
+        case 17:
+
+            gameMessage = "You are at the lighthouse in the port and the view is impressive. From here, you can see the vast ocean stretching as far as the eye can see, with ships and vessels sailing on the horizon. The salty sea breeze blows on your face, and you can hear the waves crashing against the nearby rocks. The lighthouse itself is an impressive structure, towering over the blue sky. Being here makes you feel small and humble in the face of the vastness of the sea and nature.";
+            
+            break;
+        case 18:
+
+            gameMessage = "Being at the main port, you are surrounded by a vibrant maritime activity. Large ships full of people move in the water, while impressive warships sail on the horizon. The fantastic medieval city is a spectacle for the eyes, with its ancient walls and majestic castles. The sound of the sea waves and the salty breeze in the air create a sense of freedom and adventure. This place transports you to a world of fantasy and makes you imagine epic stories of knights and pirates.";
+            
+            break;
+        case 19:
+
+            gameMessage = "You are in a plain with pink trees that seems infinite. As you look around, you realize that there is no end in sight: the plain stretches as far as the eye can see. The gentle wind rustles the leaves of the trees and caresses your skin. The sweet and soft aroma of the flowers envelops you as you walk through this magical and peaceful landscape. You are grateful to have found this place and decide to stay a while longer to enjoy its beauty.";
+            
+            break;
+        case 20:
+
+            gameMessage = "You are in a forest with gigantic trees that leave you breathless. As you advance, you realize that the forest is getting denser and darker. Despite this, you feel tempted to venture even further into it. However, you begin to feel a sense of unease as you realize that you could get lost. You wonder if you should keep exploring or turn back, but something inside of you tells you to continue. You face a dilemma between curiosity and fear of the unknown.";
+            
+            break;
+        case 21:
+            if (!goldenKeyCatched) {
+
+                gameMessage = "On your way, you come across an abandoned cabin that nature has reclaimed for itself. You decide to enter, exploring its ruins covered in vines and moss. In a hidden corner, you find a golden key, probably left behind by someone a long time ago. You wonder what secrets could be behind that locked door the key might open, and you feel intrigued by the possibility of discovering a forgotten treasure in time.";
+                
+            } else if (goldenKeyCatched){
+
+                "You are wondering if you could acquire the abandoned cabin, the location is not bad and it doesn't seem very expensive. Maybe you could restore it and turn it into a perfect country house to escape from the noise of the city. However, you should consider the costs of renovation and repairs, as well as the necessary permits to make any changes to the property. It is worth reflecting and analyzing well before making a decision."
+
+            }
+            
+            break;
+        case 22:
+            if (!fishingRodCatched) {
+
+                gameMessage = "While you are at the fishermen's port, surrounded by a lot of people, suddenly a fisherman with strange looks asks you if you are interested in fishing. Upon responding positively, the fisherman offers you a fishing rod. It could be an exciting opportunity to try something new and experience fishing firsthand, with the guidance of the local fisherman. Sometimes, the most interesting experiences arise from interacting with strangers in unfamiliar places.";
+                
+            } else if (fishingRodCatched){
+
+               gameMessage = "Since the strange fisherman gave you the fishing rod, you have come to fish with him from time to time. The experience has become fun and enjoyable. Fishing can be a relaxing and exciting activity at the same time, and sharing it with someone can make it even more pleasant. Thank the strange fisherman for introducing you to this hobby, and hopefully, you can enjoy many more fishing adventures together."; 
+
+            }
+            
+            break;
+        case 23:
+            if (!invisibilityPotionCrafted) {
+
+                gameMessage = "After arriving by boat, you find yourself in the Tower of the Council of Mages, where there are many guards and a lot of commotion. It seems like they are protecting a new discovery. The excitement in the air is palpable, and the atmosphere feels tense and intriguing. Something very important is likely happening, and you are in the right place at the right time. Stay alert and attentive to any new developments that may arise.";
+
+                gameMessage += "<br><br>Maybe if no one sees you, you could go in and steal the discovery.";
+                
+            } else if (invisibilityPotionCrafted){
+
+                gameMessage = "Having the invisibility potion with you has allowed you to realize that someone is hiding a protection amulet. If you decide to use the potion, you could steal it without making any fuss. However, you should consider the ethical consequences of stealing and how it would affect the person who owns it. Perhaps you can find a more fair way of obtaining it or simply let it remain where it is. Remember that actions have consequences, even when no one can see you.";
+
+            } 
+            if (invisibilityPotionUsed){
+
+                gameMessage = "Now that I have the amulet in my possession, I can walk in front of the tower without anyone knowing that it was me who took it, and the best part is that I don't feel guilty. The power of the amulet gives me a sense of security and protection. However, I must remember that taking things that do not belong to me is not right and that I should always act with integrity and honesty.";
+
+            }
+            
+            break;
+        case 24:
+            if (!invisibilityPotionCrafted) {
+                
+                gameMessage = "As I was walking down the street, I stumbled upon an herbal shop. The shopkeeper seemed cheerful and told me that he didn't have many customers. He offered me an interesting deal: if I brought him the 'Smell flower', the 'Blind flower', and the 'Whispering flower', he would create a potion for me completely free of charge. The proposition intrigued me, and I decided to accept the challenge. Now I venture forth in search of these mysterious flowers to claim my reward. Who knows what other secrets await me on this journey.";
+
+            } else if(invisibilityPotionCrafted){
+
+                gameMessage = "After seeing the herbalist create the potion, I have become very interested in the world of alchemy. From time to time, I come to see if the herbalist can teach me anything more about this fascinating practice. I enjoy learning about the different properties of herbs and how they can be used to create natural remedies. I hope to continue learning more of this ancient wisdom and apply it in my daily life.";
+
+            }
+            
+            break;
+    
+        
+    }
+
+}
+
+
+</script>
+</html>
